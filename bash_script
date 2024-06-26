@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Function to check Disk Space
+check_disk_space() {
+  echo "Disk Space Usage:"
+  df -h | awk 'NR==1 || /\/$/'
+  echo
+}
+
+# Function to check Memory Usage
+check_memory_usage() {
+  echo "Memory Usage:"
+  free -h | awk 'NR==1 || NR==2'
+  echo
+}
+
+# Function to check CPU Usage
+check_cpu_usage() {
+  echo "CPU Usage:"
+  top -bn1 | grep "Cpu(s)" | \
+  sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
+  awk '{print "CPU Load: " 100 - $1"%"}'
+  echo
+}
+
+# Main function to run all checks
+main() {
+  echo "Server Health Check"
+  echo "===================="
+  echo
+  check_disk_space
+  check_memory_usage
+  check_cpu_usage
+}
+
+# Execute main function
+main
